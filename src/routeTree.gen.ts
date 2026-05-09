@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as SellerIdRouteImport } from './routes/seller.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ChatIdRouteImport } from './routes/chat.$id'
 
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/post': typeof PostRoute
   '/search': typeof SearchRoute
+  '/wallet': typeof WalletRoute
   '/chat/$id': typeof ChatIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/$id': typeof SellerIdRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/post': typeof PostRoute
   '/search': typeof SearchRoute
+  '/wallet': typeof WalletRoute
   '/chat/$id': typeof ChatIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/$id': typeof SellerIdRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/post': typeof PostRoute
   '/search': typeof SearchRoute
+  '/wallet': typeof WalletRoute
   '/chat/$id': typeof ChatIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/$id': typeof SellerIdRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/post'
     | '/search'
+    | '/wallet'
     | '/chat/$id'
     | '/product/$id'
     | '/seller/$id'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/post'
     | '/search'
+    | '/wallet'
     | '/chat/$id'
     | '/product/$id'
     | '/seller/$id'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/post'
     | '/search'
+    | '/wallet'
     | '/chat/$id'
     | '/product/$id'
     | '/seller/$id'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PostRoute: typeof PostRoute
   SearchRoute: typeof SearchRoute
+  WalletRoute: typeof WalletRoute
   ChatIdRoute: typeof ChatIdRoute
   ProductIdRoute: typeof ProductIdRoute
   SellerIdRoute: typeof SellerIdRoute
@@ -123,6 +136,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PostRoute: PostRoute,
   SearchRoute: SearchRoute,
+  WalletRoute: WalletRoute,
   ChatIdRoute: ChatIdRoute,
   ProductIdRoute: ProductIdRoute,
   SellerIdRoute: SellerIdRoute,
