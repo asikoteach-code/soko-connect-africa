@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as PostRouteImport } from './routes/post'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatIndexRouteImport } from './routes/chat.index'
 import { Route as SellerIdRouteImport } from './routes/seller.$id'
@@ -19,6 +20,11 @@ import { Route as ChatIdRouteImport } from './routes/chat.$id'
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostRoute = PostRouteImport.update({
+  id: '/post',
+  path: '/post',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +55,7 @@ const ChatIdRoute = ChatIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/post': typeof PostRoute
   '/search': typeof SearchRoute
   '/chat/$id': typeof ChatIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/post': typeof PostRoute
   '/search': typeof SearchRoute
   '/chat/$id': typeof ChatIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/post': typeof PostRoute
   '/search': typeof SearchRoute
   '/chat/$id': typeof ChatIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -76,16 +85,25 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/post'
     | '/search'
     | '/chat/$id'
     | '/product/$id'
     | '/seller/$id'
     | '/chat/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/search' | '/chat/$id' | '/product/$id' | '/seller/$id' | '/chat'
+  to:
+    | '/'
+    | '/post'
+    | '/search'
+    | '/chat/$id'
+    | '/product/$id'
+    | '/seller/$id'
+    | '/chat'
   id:
     | '__root__'
     | '/'
+    | '/post'
     | '/search'
     | '/chat/$id'
     | '/product/$id'
@@ -95,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PostRoute: typeof PostRoute
   SearchRoute: typeof SearchRoute
   ChatIdRoute: typeof ChatIdRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -109,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post': {
+      id: '/post'
+      path: '/post'
+      fullPath: '/post'
+      preLoaderRoute: typeof PostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -151,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PostRoute: PostRoute,
   SearchRoute: SearchRoute,
   ChatIdRoute: ChatIdRoute,
   ProductIdRoute: ProductIdRoute,
