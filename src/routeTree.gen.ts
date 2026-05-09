@@ -20,6 +20,7 @@ import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as ChatIndexRouteImport } from './routes/chat.index'
 import { Route as SellerIdRouteImport } from './routes/seller.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as JobsIdRouteImport } from './routes/jobs.$id'
 import { Route as ChatIdRouteImport } from './routes/chat.$id'
 
 const WalletRoute = WalletRouteImport.update({
@@ -77,6 +78,11 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JobsIdRoute = JobsIdRouteImport.update({
+  id: '/jobs/$id',
+  path: '/jobs/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChatIdRoute = ChatIdRouteImport.update({
   id: '/chat/$id',
   path: '/chat/$id',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/wallet': typeof WalletRoute
   '/chat/$id': typeof ChatIdRoute
+  '/jobs/$id': typeof JobsIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/$id': typeof SellerIdRoute
   '/chat/': typeof ChatIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/wallet': typeof WalletRoute
   '/chat/$id': typeof ChatIdRoute
+  '/jobs/$id': typeof JobsIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/$id': typeof SellerIdRoute
   '/chat': typeof ChatIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/wallet': typeof WalletRoute
   '/chat/$id': typeof ChatIdRoute
+  '/jobs/$id': typeof JobsIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/$id': typeof SellerIdRoute
   '/chat/': typeof ChatIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/wallet'
     | '/chat/$id'
+    | '/jobs/$id'
     | '/product/$id'
     | '/seller/$id'
     | '/chat/'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/wallet'
     | '/chat/$id'
+    | '/jobs/$id'
     | '/product/$id'
     | '/seller/$id'
     | '/chat'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/wallet'
     | '/chat/$id'
+    | '/jobs/$id'
     | '/product/$id'
     | '/seller/$id'
     | '/chat/'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   WalletRoute: typeof WalletRoute
   ChatIdRoute: typeof ChatIdRoute
+  JobsIdRoute: typeof JobsIdRoute
   ProductIdRoute: typeof ProductIdRoute
   SellerIdRoute: typeof SellerIdRoute
   ChatIndexRoute: typeof ChatIndexRoute
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jobs/$id': {
+      id: '/jobs/$id'
+      path: '/jobs/$id'
+      fullPath: '/jobs/$id'
+      preLoaderRoute: typeof JobsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/chat/$id': {
       id: '/chat/$id'
       path: '/chat/$id'
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   WalletRoute: WalletRoute,
   ChatIdRoute: ChatIdRoute,
+  JobsIdRoute: JobsIdRoute,
   ProductIdRoute: ProductIdRoute,
   SellerIdRoute: SellerIdRoute,
   ChatIndexRoute: ChatIndexRoute,
