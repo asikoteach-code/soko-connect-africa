@@ -79,7 +79,7 @@ function JobDetail() {
 
         <h2 className="font-display font-bold mt-6 mb-3">Skills</h2>
         <div className="flex gap-2 flex-wrap">
-          {j.tags.map((t) => (
+          {j.tags.map((t: string) => (
             <span
               key={t}
               className="text-xs font-semibold bg-primary-soft text-primary px-3 py-1.5 rounded-full"
