@@ -13,6 +13,7 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as PostRouteImport } from './routes/post'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatIndexRouteImport } from './routes/chat.index'
 import { Route as SellerIdRouteImport } from './routes/seller.$id'
@@ -37,6 +38,11 @@ const SavedRoute = SavedRouteImport.update({
 const PostRoute = PostRouteImport.update({
   id: '/post',
   path: '/post',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -67,6 +73,7 @@ const ChatIdRoute = ChatIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/notifications': typeof NotificationsRoute
   '/post': typeof PostRoute
   '/saved': typeof SavedRoute
   '/search': typeof SearchRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/notifications': typeof NotificationsRoute
   '/post': typeof PostRoute
   '/saved': typeof SavedRoute
   '/search': typeof SearchRoute
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/notifications': typeof NotificationsRoute
   '/post': typeof PostRoute
   '/saved': typeof SavedRoute
   '/search': typeof SearchRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/notifications'
     | '/post'
     | '/saved'
     | '/search'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/notifications'
     | '/post'
     | '/saved'
     | '/search'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/notifications'
     | '/post'
     | '/saved'
     | '/search'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NotificationsRoute: typeof NotificationsRoute
   PostRoute: typeof PostRoute
   SavedRoute: typeof SavedRoute
   SearchRoute: typeof SearchRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/post'
       fullPath: '/post'
       preLoaderRoute: typeof PostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -217,6 +237,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NotificationsRoute: NotificationsRoute,
   PostRoute: PostRoute,
   SavedRoute: SavedRoute,
   SearchRoute: SearchRoute,
