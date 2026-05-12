@@ -1,50 +1,178 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Search, PlusCircle, MessageCircle, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Home,
+  Search,
+  Plus,
+  MessageCircle,
+  User,
+  Tag,
+  Briefcase,
+  Wrench,
+  Users,
+  Rocket,
+  X,
+} from "lucide-react";
 
-type NavItem = { to: string; label: string; icon: typeof Home; primary?: boolean };
+type NavItem = { to: string; label: string; icon: typeof Home };
 const items: NavItem[] = [
   { to: "/", label: "Home", icon: Home },
   { to: "/search", label: "Search", icon: Search },
-  { to: "/post", label: "Sell", icon: PlusCircle, primary: true },
   { to: "/chat", label: "Chats", icon: MessageCircle },
   { to: "/profile", label: "Profile", icon: User },
 ];
 
+type FabAction = {
+  to: string;
+  label: string;
+  icon: typeof Tag;
+  tint: string;
+};
+
+const fabActions: FabAction[] = [
+  { to: "/post", label: "Sell Product", icon: Tag, tint: "bg-gradient-primary text-primary-foreground" },
+  { to: "/post", label: "Offer Service", icon: Wrench, tint: "bg-accent text-accent-foreground" },
+  { to: "/post", label: "Post Job", icon: Briefcase, tint: "bg-gold text-gold-foreground" },
+  { to: "/jobs", label: "Find Worker", icon: Users, tint: "bg-primary-soft text-primary" },
+  { to: "/wallet", label: "Boost Listing", icon: Rocket, tint: "bg-foreground text-background" },
+];
+
 export function BottomNav() {
   const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const left = items.slice(0, 2);
+  const right = items.slice(2);
+
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 mx-auto max-w-md border-t border-border bg-surface/95 backdrop-blur-lg safe-bottom">
-      <ul className="grid grid-cols-5 items-end px-2 pt-2">
-        {items.map(({ to, label, icon: Icon, primary }) => {
-          const active = pathname === to || (to !== "/" && pathname.startsWith(to));
-          if (primary) {
-            return (
-              <li key={to} className="flex justify-center -mt-6">
+    <>
+      {/* Backdrop + radial menu */}
+      <div
+        className={`fixed inset-0 z-40 transition-all duration-300 ${
+          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        aria-hidden={!open}
+      >
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="absolute inset-0 bg-foreground/40 backdrop-blur-md"
+          aria-label="Close menu"
+        />
+
+        {/* Floating action cards */}
+        <div className="absolute inset-x-0 bottom-28 mx-auto max-w-md px-6">
+          <div className="mb-4 text-center">
+            <p
+              className={`inline-block rounded-full bg-card/90 backdrop-blur px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground shadow-card transition-all duration-300 ${
+                open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+              }`}
+            >
+              What do you want to do?
+            </p>
+          </div>
+          <ul className="space-y-2.5">
+            {fabActions.map(({ to, label, icon: Icon, tint }, i) => (
+              <li
+                key={label}
+                style={{
+                  transitionDelay: open ? `${i * 45}ms` : "0ms",
+                }}
+                className={`transform transition-all duration-300 ease-out ${
+                  open ? "translate-y-0 opacity-100 scale-100" : "translate-y-6 opacity-0 scale-95"
+                }`}
+              >
                 <Link
                   to={to as "/post"}
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-primary text-primary-foreground shadow-elevated active:scale-95 transition"
-                  aria-label={label}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-2xl border border-white/40 bg-card/85 backdrop-blur-xl px-4 py-3 shadow-elevated active:scale-[0.98] transition"
                 >
-                  <Icon className="h-6 w-6" strokeWidth={2.4} />
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${tint} shadow-card`}>
+                    <Icon className="h-5 w-5" strokeWidth={2.4} />
+                  </span>
+                  <span className="flex-1 text-sm font-semibold text-foreground">{label}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">Tap</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Bottom nav bar */}
+      <nav className="fixed bottom-0 inset-x-0 z-50 mx-auto max-w-md border-t border-border bg-surface/95 backdrop-blur-lg safe-bottom">
+        <ul className="grid grid-cols-5 items-end px-2 pt-2">
+          {left.map(({ to, label, icon: Icon }) => {
+            const active = pathname === to || (to !== "/" && pathname.startsWith(to));
+            return (
+              <li key={to}>
+                <Link
+                  to={to as "/"}
+                  className={`flex flex-col items-center gap-1 py-2 text-[11px] font-medium transition ${
+                    active ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" strokeWidth={active ? 2.4 : 2} />
+                  <span>{label}</span>
                 </Link>
               </li>
             );
-          }
-          return (
-            <li key={to}>
-              <Link
-                to={to as "/"}
-                className={`flex flex-col items-center gap-1 py-2 text-[11px] font-medium transition ${
-                  active ? "text-primary" : "text-muted-foreground"
+          })}
+
+          {/* Center FAB */}
+          <li className="flex justify-center -mt-6">
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-label={open ? "Close create menu" : "Open create menu"}
+              className={`relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-primary text-primary-foreground shadow-elevated transition-all duration-300 active:scale-90 ${
+                open ? "rotate-45 scale-105" : "rotate-0"
+              }`}
+            >
+              {/* pulse ring */}
+              <span
+                className={`absolute inset-0 rounded-2xl bg-primary/30 transition-all duration-500 ${
+                  open ? "scale-150 opacity-0" : "scale-100 opacity-0 animate-pulse"
                 }`}
-              >
-                <Icon className="h-5 w-5" strokeWidth={active ? 2.4 : 2} />
-                <span>{label}</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+              />
+              {open ? (
+                <X className="h-6 w-6 -rotate-45" strokeWidth={2.6} />
+              ) : (
+                <Plus className="h-6 w-6" strokeWidth={2.6} />
+              )}
+            </button>
+          </li>
+
+          {right.map(({ to, label, icon: Icon }) => {
+            const active = pathname === to || (to !== "/" && pathname.startsWith(to));
+            return (
+              <li key={to}>
+                <Link
+                  to={to as "/"}
+                  className={`flex flex-col items-center gap-1 py-2 text-[11px] font-medium transition ${
+                    active ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" strokeWidth={active ? 2.4 : 2} />
+                  <span>{label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }
