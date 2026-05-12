@@ -75,25 +75,25 @@ export function BottomNav() {
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-md">
           {/* Hint label */}
           <p
-            className={`absolute left-1/2 -translate-x-1/2 bottom-[260px] whitespace-nowrap rounded-full bg-card/90 backdrop-blur px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground shadow-card transition-all duration-300 ${
+            className={`absolute left-1/2 -translate-x-1/2 bottom-[360px] whitespace-nowrap rounded-full bg-card/90 backdrop-blur px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground shadow-card transition-all duration-300 ${
               open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
             }`}
           >
             What do you want to do?
           </p>
 
-          {/* Arc container — pivot point sits roughly at FAB center */}
-          <div className="relative mx-auto h-[260px] w-[300px]">
+          {/* Arc container — pivot point sits roughly at FAB center, lifted above bottom nav */}
+          <div className="relative mx-auto h-[340px] w-full max-w-[380px] px-2">
             {fabActions.map(({ to, label, icon: Icon, tint }, i) => {
               const total = fabActions.length;
-              // Spread evenly across a 160° arc, from 190° to 350° (upper semi-circle)
-              const startDeg = -170; // left
-              const endDeg = -10;    // right
+              // Wider arc: 200° spread for spacious distribution
+              const startDeg = -190;
+              const endDeg = -10;
               const t = total === 1 ? 0.5 : i / (total - 1);
               const angle = (startDeg + (endDeg - startDeg) * t) * (Math.PI / 180);
-              const radius = 118;
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius; // negative => upward
+              // Responsive radius scales with viewport (~32% larger than before)
+              const x = `calc(cos(${angle}rad) * clamp(140px, 42vw, 165px))`;
+              const y = `calc(sin(${angle}rad) * clamp(140px, 42vw, 165px))`;
 
               return (
                 <Link
@@ -103,22 +103,23 @@ export function BottomNav() {
                   aria-label={label}
                   style={{
                     left: "50%",
-                    bottom: "20px",
+                    bottom: "100px",
                     transform: open
-                      ? `translate(calc(-50% + ${x}px), ${y}px) scale(1)`
+                      ? `translate(calc(-50% + ${x}), ${y}) scale(1)`
                       : `translate(-50%, 0) scale(0.4)`,
                     opacity: open ? 1 : 0,
-                    transitionDelay: open ? `${i * 55}ms` : `${(total - i) * 25}ms`,
+                    transitionDelay: open ? `${i * 70}ms` : `${(total - i) * 25}ms`,
                     transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    animation: open ? `float-soft 4s ease-in-out ${i * 0.2}s infinite` : "none",
                   }}
-                  className="absolute flex flex-col items-center gap-1.5 transition-all duration-500 will-change-transform"
+                  className="absolute flex flex-col items-center gap-2 transition-all duration-[600ms] will-change-transform"
                 >
                   <span
                     className={`flex h-14 w-14 items-center justify-center rounded-full ${tint} shadow-elevated ring-1 ring-white/40 backdrop-blur-xl active:scale-90 transition-transform`}
                   >
                     <Icon className="h-6 w-6" strokeWidth={2.4} />
                   </span>
-                  <span className="rounded-full bg-card/90 backdrop-blur px-2.5 py-0.5 text-[10px] font-semibold text-foreground shadow-card whitespace-nowrap">
+                  <span className="rounded-full bg-card/95 backdrop-blur px-3 py-1 text-[11px] font-semibold text-foreground shadow-card whitespace-nowrap max-w-[130px] text-center">
                     {label}
                   </span>
                 </Link>
