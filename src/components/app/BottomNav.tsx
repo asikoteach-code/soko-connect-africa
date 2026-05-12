@@ -71,42 +71,60 @@ export function BottomNav() {
           aria-label="Close menu"
         />
 
-        {/* Floating action cards */}
-        <div className="absolute inset-x-0 bottom-28 mx-auto max-w-md px-6">
-          <div className="mb-4 text-center">
-            <p
-              className={`inline-block rounded-full bg-card/90 backdrop-blur px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground shadow-card transition-all duration-300 ${
-                open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-              }`}
-            >
-              What do you want to do?
-            </p>
-          </div>
-          <ul className="space-y-2.5">
-            {fabActions.map(({ to, label, icon: Icon, tint }, i) => (
-              <li
-                key={label}
-                style={{
-                  transitionDelay: open ? `${i * 45}ms` : "0ms",
-                }}
-                className={`transform transition-all duration-300 ease-out ${
-                  open ? "translate-y-0 opacity-100 scale-100" : "translate-y-6 opacity-0 scale-95"
-                }`}
-              >
+        {/* Semi-circle arc menu anchored above the FAB */}
+        <div className="absolute inset-x-0 bottom-0 mx-auto max-w-md">
+          {/* Hint label */}
+          <p
+            className={`absolute left-1/2 -translate-x-1/2 bottom-[260px] whitespace-nowrap rounded-full bg-card/90 backdrop-blur px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground shadow-card transition-all duration-300 ${
+              open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+            }`}
+          >
+            What do you want to do?
+          </p>
+
+          {/* Arc container — pivot point sits roughly at FAB center */}
+          <div className="relative mx-auto h-[260px] w-[300px]">
+            {fabActions.map(({ to, label, icon: Icon, tint }, i) => {
+              const total = fabActions.length;
+              // Spread evenly across a 160° arc, from 190° to 350° (upper semi-circle)
+              const startDeg = -170; // left
+              const endDeg = -10;    // right
+              const t = total === 1 ? 0.5 : i / (total - 1);
+              const angle = (startDeg + (endDeg - startDeg) * t) * (Math.PI / 180);
+              const radius = 118;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius; // negative => upward
+
+              return (
                 <Link
+                  key={label}
                   to={to as "/post"}
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 rounded-2xl border border-white/40 bg-card/85 backdrop-blur-xl px-4 py-3 shadow-elevated active:scale-[0.98] transition"
+                  aria-label={label}
+                  style={{
+                    left: "50%",
+                    bottom: "20px",
+                    transform: open
+                      ? `translate(calc(-50% + ${x}px), ${y}px) scale(1)`
+                      : `translate(-50%, 0) scale(0.4)`,
+                    opacity: open ? 1 : 0,
+                    transitionDelay: open ? `${i * 55}ms` : `${(total - i) * 25}ms`,
+                    transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  }}
+                  className="absolute flex flex-col items-center gap-1.5 transition-all duration-500 will-change-transform"
                 >
-                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${tint} shadow-card`}>
-                    <Icon className="h-5 w-5" strokeWidth={2.4} />
+                  <span
+                    className={`flex h-14 w-14 items-center justify-center rounded-full ${tint} shadow-elevated ring-1 ring-white/40 backdrop-blur-xl active:scale-90 transition-transform`}
+                  >
+                    <Icon className="h-6 w-6" strokeWidth={2.4} />
                   </span>
-                  <span className="flex-1 text-sm font-semibold text-foreground">{label}</span>
-                  <span className="text-[11px] font-medium text-muted-foreground">Tap</span>
+                  <span className="rounded-full bg-card/90 backdrop-blur px-2.5 py-0.5 text-[10px] font-semibold text-foreground shadow-card whitespace-nowrap">
+                    {label}
+                  </span>
                 </Link>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         </div>
       </div>
 
