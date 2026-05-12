@@ -31,7 +31,7 @@ function Home() {
       <HomeHeader />
 
       {/* Trust strip */}
-      <div className="px-5 -mt-4">
+      <div className="px-5 mt-5">
         <div className="bg-card rounded-2xl shadow-card grid grid-cols-3 divide-x divide-border">
           {[
             { icon: ShieldCheck, label: "Verified sellers" },
