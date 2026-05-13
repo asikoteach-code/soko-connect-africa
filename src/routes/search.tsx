@@ -164,6 +164,7 @@ function SearchPage() {
   const [sort, setSort] = useState<SortKey>("relevance");
   const [visible, setVisible] = useState(8);
   const [loading, setLoading] = useState(false);
+  const [discoverCat, setDiscoverCat] = useState<string | null>(null);
 
   // Filters
   const [price, setPrice] = useState<[number, number]>([0, 2000000]);
