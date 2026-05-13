@@ -881,6 +881,14 @@ function SearchPage() {
           })()}
         </SheetContent>
       </Sheet>
+
+      {mapOpen && (
+        <MapView
+          pins={(matched.length > 0 ? matched : products).map(withGeo)}
+          city={city || "Nairobi"}
+          onClose={() => { setMapOpen(false); setView("list"); }}
+        />
+      )}
     </AppShell>
   );
 }
