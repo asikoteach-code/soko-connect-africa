@@ -86,6 +86,58 @@ const SUBMODELS: Record<string, SubModel[]> = {
     { name: "Cleaner", emoji: "🧹", tint: "oklch(0.94 0.05 155)" },
   ],
 };
+
+const BRANDS: Record<string, { name: string; emoji: string }[]> = {
+  phones: [
+    { name: "Apple", emoji: "🍎" }, { name: "Samsung", emoji: "📲" },
+    { name: "Tecno", emoji: "📱" }, { name: "Infinix", emoji: "⚡" },
+    { name: "Xiaomi", emoji: "🔋" }, { name: "Google", emoji: "✨" },
+  ],
+  vehicles: [
+    { name: "Toyota", emoji: "🚗" }, { name: "BMW", emoji: "🏎️" },
+    { name: "Honda", emoji: "🚙" }, { name: "Nissan", emoji: "🛻" },
+    { name: "Mercedes", emoji: "✨" }, { name: "Mazda", emoji: "🚘" },
+  ],
+  fashion: [
+    { name: "Nike", emoji: "👟" }, { name: "Zara", emoji: "🧥" },
+    { name: "Gucci", emoji: "👜" }, { name: "Adidas", emoji: "👕" },
+    { name: "Ankara", emoji: "👗" },
+  ],
+  home: [
+    { name: "IKEA", emoji: "🛋️" }, { name: "Habitat", emoji: "🛏️" },
+    { name: "Samsung", emoji: "📺" }, { name: "LG", emoji: "🍳" },
+  ],
+  electronics: [
+    { name: "Apple", emoji: "💻" }, { name: "Sony", emoji: "🎧" },
+    { name: "Canon", emoji: "📷" }, { name: "HP", emoji: "🖥️" },
+    { name: "Dell", emoji: "⌨️" },
+  ],
+  beauty: [
+    { name: "Naya", emoji: "🧴" }, { name: "Shea Moisture", emoji: "🌿" },
+    { name: "Fenty", emoji: "💄" }, { name: "L'Oréal", emoji: "💋" },
+  ],
+  jobs: [
+    { name: "Flutterwave", emoji: "💳" }, { name: "Twiga", emoji: "🥬" },
+    { name: "M-KOPA", emoji: "☀️" }, { name: "Jumia", emoji: "🛒" },
+  ],
+  services: [
+    { name: "Plumbing", emoji: "🔧" }, { name: "Tutoring", emoji: "📚" },
+    { name: "Photo", emoji: "📷" }, { name: "Cleaning", emoji: "🧹" },
+  ],
+};
+
+const SUGGESTED_QUERIES: Record<string, string[]> = {
+  phones: ["iPhone under $500", "Samsung dual SIM", "Gaming phones", "Phones with 5G"],
+  vehicles: ["SUVs under 2M", "Manual sedans", "First owner cars", "Diesel pickups"],
+  fashion: ["Sneakers under 5K", "Ankara dresses", "Bridal wear", "Designer bags"],
+  home: ["3-seater sofas", "Smart TVs 55\"", "King size beds", "Office chairs"],
+  electronics: ["Macbook under 150K", "Gaming PCs", "Wireless headphones", "DSLR cameras"],
+  beauty: ["Natural skincare", "Lash extensions", "Bridal makeup", "Hair braiders"],
+  jobs: ["Remote jobs", "Entry level", "Tech jobs Lagos", "Sales roles"],
+  services: ["Plumbers near me", "Math tutors", "Event photographers", "Deep cleaning"],
+};
+
+const QUICK_FILTERS = ["New", "Used", "Verified", "Cheap", "Nearby"];
 const TRENDING = ["Smart TVs", "Studio space", "Hair braiders", "Solar panels", "PS5", "Generators"];
 const POPULAR_SEARCHES = ["Tecno Camon 20", "Office chair", "Plot in Kitengela", "Bridal hair"];
 const PRESETS: { label: string; range: [number, number] }[] = [
