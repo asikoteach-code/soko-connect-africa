@@ -168,7 +168,7 @@ export function MapView({
           <X className="h-5 w-5" />
         </button>
         <div className="flex-1 bg-card/95 backdrop-blur rounded-full shadow-elevated px-4 py-2.5 flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-primary" />
+          <MapPinIcon className="h-4 w-4 text-primary" />
           <div className="min-w-0">
             <p className="text-[11px] text-muted-foreground leading-none">Showing near</p>
             <p className="text-sm font-bold leading-tight truncate">{city} · {radius}km radius</p>
