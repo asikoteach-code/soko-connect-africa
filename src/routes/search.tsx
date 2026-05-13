@@ -277,10 +277,10 @@ function SearchPage() {
               return (
                 <button
                   key={c.id}
-                  onClick={() => setActiveCat(c.id)}
-                  className={`shrink-0 snap-start inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-full transition ${
+                  onClick={() => setActiveCat(active && c.id !== "all" ? "all" : c.id)}
+                  className={`shrink-0 snap-start inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-full transition-all duration-300 ${
                     active
-                      ? "bg-primary text-primary-foreground shadow-card"
+                      ? "bg-primary text-primary-foreground shadow-card scale-[1.04]"
                       : "bg-muted text-foreground hover:bg-secondary"
                   }`}
                 >
@@ -291,6 +291,38 @@ function SearchPage() {
             })}
           </div>
           <div className="pointer-events-none absolute right-0 top-0 bottom-3 w-10 bg-gradient-to-l from-surface to-transparent" />
+        </div>
+
+        {/* Sub-model suggestion row */}
+        <div
+          className={`grid transition-[grid-template-rows] duration-500 ease-out ${
+            SUBMODELS[activeCat] ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <div className="overflow-hidden">
+            {SUBMODELS[activeCat] && (
+              <div key={activeCat} className="flex gap-2.5 px-3 pb-3 overflow-x-auto scrollbar-hide">
+                {SUBMODELS[activeCat].map((m, i) => (
+                  <button
+                    key={m.name}
+                    onClick={() => submitSearch(m.name)}
+                    style={{
+                      background: `linear-gradient(135deg, ${m.tint}, color-mix(in oklab, ${m.tint} 55%, white))`,
+                      animationDelay: `${i * 45}ms`,
+                    }}
+                    className="shrink-0 inline-flex items-center gap-2 pl-1.5 pr-3.5 py-1.5 rounded-2xl shadow-card ring-1 ring-border/60 active:scale-95 hover:-translate-y-0.5 transition-transform animate-fade-in opacity-0 [animation-fill-mode:forwards]"
+                  >
+                    <span className="h-8 w-8 grid place-items-center rounded-xl bg-white/70 backdrop-blur text-base shadow-sm">
+                      {m.emoji}
+                    </span>
+                    <span className="text-xs font-semibold text-foreground whitespace-nowrap">
+                      {m.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
