@@ -26,6 +26,66 @@ export const Route = createFileRoute("/search")({
 });
 
 const PLACEHOLDERS = ["iPhone 14...", "Ankara dress...", "Toyota Axio...", "Studio space..."];
+
+type SubModel = { name: string; emoji: string; tint: string };
+const SUBMODELS: Record<string, SubModel[]> = {
+  phones: [
+    { name: "iPhone 15 Pro Max", emoji: "📱", tint: "oklch(0.94 0.04 260)" },
+    { name: "Samsung S24 Ultra", emoji: "📲", tint: "oklch(0.94 0.05 220)" },
+    { name: "Tecno Camon 30", emoji: "📷", tint: "oklch(0.94 0.05 30)" },
+    { name: "Infinix Zero", emoji: "⚡", tint: "oklch(0.94 0.05 80)" },
+    { name: "Redmi Note 14", emoji: "🔋", tint: "oklch(0.94 0.05 155)" },
+    { name: "Pixel 8", emoji: "✨", tint: "oklch(0.94 0.05 180)" },
+  ],
+  vehicles: [
+    { name: "Toyota Prado", emoji: "🚙", tint: "oklch(0.94 0.05 155)" },
+    { name: "BMW X5", emoji: "🏎️", tint: "oklch(0.94 0.05 240)" },
+    { name: "Honda Fit", emoji: "🚗", tint: "oklch(0.94 0.05 30)" },
+    { name: "Nissan Patrol", emoji: "🛻", tint: "oklch(0.94 0.05 80)" },
+    { name: "Mercedes C300", emoji: "✨", tint: "oklch(0.94 0.05 200)" },
+    { name: "Mazda Demio", emoji: "🚘", tint: "oklch(0.94 0.05 350)" },
+  ],
+  fashion: [
+    { name: "Nike Air Force", emoji: "👟", tint: "oklch(0.94 0.05 20)" },
+    { name: "Zara Hoodie", emoji: "🧥", tint: "oklch(0.94 0.05 260)" },
+    { name: "Gucci Bag", emoji: "👜", tint: "oklch(0.94 0.05 50)" },
+    { name: "Adidas Samba", emoji: "👟", tint: "oklch(0.94 0.05 155)" },
+    { name: "Ankara Dress", emoji: "👗", tint: "oklch(0.94 0.05 30)" },
+    { name: "Kente Shirt", emoji: "👕", tint: "oklch(0.94 0.05 80)" },
+  ],
+  home: [
+    { name: "3-seater Sofa", emoji: "🛋️", tint: "oklch(0.94 0.05 80)" },
+    { name: "King Bed", emoji: "🛏️", tint: "oklch(0.94 0.05 30)" },
+    { name: "Dining Set", emoji: "🍽️", tint: "oklch(0.94 0.05 50)" },
+    { name: "Office Chair", emoji: "🪑", tint: "oklch(0.94 0.05 220)" },
+    { name: "Smart TV", emoji: "📺", tint: "oklch(0.94 0.05 260)" },
+  ],
+  electronics: [
+    { name: "Macbook Air M2", emoji: "💻", tint: "oklch(0.94 0.05 220)" },
+    { name: "PS5", emoji: "🎮", tint: "oklch(0.94 0.05 260)" },
+    { name: "Sony Headphones", emoji: "🎧", tint: "oklch(0.94 0.05 280)" },
+    { name: "iPad Pro", emoji: "📱", tint: "oklch(0.94 0.05 200)" },
+    { name: "Canon DSLR", emoji: "📷", tint: "oklch(0.94 0.05 30)" },
+  ],
+  beauty: [
+    { name: "Shea Butter Set", emoji: "🧴", tint: "oklch(0.94 0.05 50)" },
+    { name: "Lash Kit", emoji: "👁️", tint: "oklch(0.94 0.05 350)" },
+    { name: "Braiding Hair", emoji: "💇🏾‍♀️", tint: "oklch(0.94 0.05 30)" },
+    { name: "Perfume", emoji: "🌸", tint: "oklch(0.94 0.05 320)" },
+  ],
+  jobs: [
+    { name: "Remote Dev", emoji: "💻", tint: "oklch(0.94 0.05 220)" },
+    { name: "Designer", emoji: "🎨", tint: "oklch(0.94 0.05 320)" },
+    { name: "Driver", emoji: "🚖", tint: "oklch(0.94 0.05 50)" },
+    { name: "Sales Rep", emoji: "📈", tint: "oklch(0.94 0.05 155)" },
+  ],
+  services: [
+    { name: "Plumber", emoji: "🔧", tint: "oklch(0.94 0.05 220)" },
+    { name: "Tutor", emoji: "📚", tint: "oklch(0.94 0.05 30)" },
+    { name: "Photographer", emoji: "📷", tint: "oklch(0.94 0.05 280)" },
+    { name: "Cleaner", emoji: "🧹", tint: "oklch(0.94 0.05 155)" },
+  ],
+};
 const TRENDING = ["Smart TVs", "Studio space", "Hair braiders", "Solar panels", "PS5", "Generators"];
 const POPULAR_SEARCHES = ["Tecno Camon 20", "Office chair", "Plot in Kitengela", "Bridal hair"];
 const PRESETS: { label: string; range: [number, number] }[] = [
