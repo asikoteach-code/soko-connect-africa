@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/AppShell";
 import { ProductCard } from "@/components/app/ProductCard";
+import { MapView, withGeo } from "@/components/app/MapView";
 import { categories, products, formatPrice } from "@/lib/mock-data";
 import {
   ArrowLeft,
@@ -165,6 +166,8 @@ function SearchPage() {
   const [visible, setVisible] = useState(8);
   const [loading, setLoading] = useState(false);
   const [discoverCat, setDiscoverCat] = useState<string | null>(null);
+  const [view, setView] = useState<"list" | "map">("list");
+  const [mapOpen, setMapOpen] = useState(false);
 
   // Filters
   const [price, setPrice] = useState<[number, number]>([0, 2000000]);
@@ -381,6 +384,38 @@ function SearchPage() {
 
       {!q ? (
         <>
+          {/* Near You — map CTA */}
+          <section className="px-5 mt-5">
+            <button
+              onClick={() => setMapOpen(true)}
+              className="relative w-full h-32 rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
+              style={{
+                background:
+                  "radial-gradient(ellipse at 25% 30%, oklch(0.92 0.06 180), transparent 60%), radial-gradient(ellipse at 80% 70%, oklch(0.92 0.07 80), transparent 60%), linear-gradient(135deg, oklch(0.95 0.03 200), oklch(0.92 0.04 150))",
+              }}
+            >
+              <svg className="absolute inset-0 h-full w-full opacity-50" preserveAspectRatio="none">
+                <path d="M0,80 Q120,60 240,100 T500,90" stroke="oklch(0.78 0.04 180)" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M80,0 Q110,80 60,160" stroke="oklch(0.78 0.04 180)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              </svg>
+              {/* Mini pins */}
+              <span className="absolute left-[18%] top-[35%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-white">
+                <span className="h-2 w-2 rounded-full bg-primary" />
+              </span>
+              <span className="absolute left-[55%] top-[25%] h-7 w-7 rounded-full bg-primary grid place-items-center shadow-elevated ring-2 ring-white">
+                <MapPin className="h-3.5 w-3.5 text-primary-foreground" />
+              </span>
+              <span className="absolute left-[78%] top-[60%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-white">
+                <span className="h-2 w-2 rounded-full bg-gold" />
+              </span>
+              <div className="absolute inset-0 p-4 flex flex-col justify-end">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-foreground/70">📍 Near you</p>
+                <p className="font-display font-bold text-lg leading-tight">Discover sellers around you</p>
+                <p className="text-xs text-foreground/70 mt-0.5">Open interactive map →</p>
+              </div>
+            </button>
+          </section>
+
           {/* Recent */}
           {recents.length > 0 && (
             <section className="px-5 mt-5">
@@ -474,11 +509,25 @@ function SearchPage() {
       ) : (
         <section className="px-5 mt-5">
           {/* Result count + summary */}
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <p className="text-sm">
               <span className="font-bold">{matched.length}</span>
               <span className="text-muted-foreground"> results{filterSummary && ` · ${filterSummary}`}</span>
             </p>
+            <div className="inline-flex bg-muted rounded-full p-0.5 text-xs font-semibold">
+              <button
+                onClick={() => setView("list")}
+                className={`px-3 py-1.5 rounded-full transition ${view === "list" ? "bg-card shadow-card" : "text-muted-foreground"}`}
+              >
+                List
+              </button>
+              <button
+                onClick={() => { setView("map"); setMapOpen(true); }}
+                className={`px-3 py-1.5 rounded-full inline-flex items-center gap-1 transition ${view === "map" ? "bg-card shadow-card" : "text-muted-foreground"}`}
+              >
+                <MapPin className="h-3 w-3" /> Map
+              </button>
+            </div>
           </div>
 
           {/* Sort chips */}
@@ -832,6 +881,14 @@ function SearchPage() {
           })()}
         </SheetContent>
       </Sheet>
+
+      {mapOpen && (
+        <MapView
+          pins={(matched.length > 0 ? matched : products).map(withGeo)}
+          city={city || "Nairobi"}
+          onClose={() => { setMapOpen(false); setView("list"); }}
+        />
+      )}
     </AppShell>
   );
 }
