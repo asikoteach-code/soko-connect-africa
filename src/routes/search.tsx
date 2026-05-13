@@ -437,7 +437,7 @@ function SearchPage() {
               {categories.slice(0, 6).map((c) => (
                 <button
                   key={c.id}
-                  onClick={() => { setActiveCat(c.id); submitSearch(""); }}
+                  onClick={() => setDiscoverCat(c.id)}
                   className="relative h-24 rounded-2xl overflow-hidden text-left p-3 shadow-card active:scale-[0.98] transition"
                   style={{ background: c.color }}
                 >
