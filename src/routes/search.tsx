@@ -664,6 +664,174 @@ function SearchPage() {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* Category Discovery modal */}
+      <Sheet open={!!discoverCat} onOpenChange={(o) => !o && setDiscoverCat(null)}>
+        <SheetContent
+          side="bottom"
+          className="rounded-t-[28px] max-h-[90vh] overflow-y-auto p-0 border-0 shadow-elevated"
+        >
+          {discoverCat && (() => {
+            const cat = categories.find((c) => c.id === discoverCat);
+            const brands = BRANDS[discoverCat] ?? [];
+            const models = SUBMODELS[discoverCat] ?? [];
+            const queries = SUGGESTED_QUERIES[discoverCat] ?? [];
+            const go = (term: string) => {
+              setDiscoverCat(null);
+              setActiveCat(discoverCat);
+              submitSearch(term);
+            };
+            return (
+              <div className="animate-fade-in">
+                <div className="mx-auto mt-2 mb-1 h-1.5 w-12 rounded-full bg-muted-foreground/30" />
+                <div
+                  className="px-5 pt-4 pb-6 rounded-t-[24px]"
+                  style={{ background: `linear-gradient(160deg, ${cat?.color}, color-mix(in oklab, ${cat?.color} 40%, white))` }}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="h-14 w-14 grid place-items-center rounded-2xl bg-white/80 backdrop-blur text-3xl shadow-card">
+                      {cat?.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <SheetHeader className="text-left">
+                        <SheetTitle className="font-display text-2xl">{cat?.name}</SheetTitle>
+                      </SheetHeader>
+                      <p className="text-xs text-foreground/70 mt-0.5">
+                        Discover trending {cat?.name.toLowerCase()} on Soko
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-5 py-5 space-y-7">
+                  {/* Popular Brands */}
+                  {brands.length > 0 && (
+                    <section>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                        Popular brands
+                      </h3>
+                      <div className="flex gap-2.5 overflow-x-auto scrollbar-hide -mx-5 px-5 pb-1">
+                        {brands.map((b, i) => (
+                          <button
+                            key={b.name}
+                            onClick={() => go(b.name)}
+                            style={{ animationDelay: `${i * 40}ms` }}
+                            className="shrink-0 flex flex-col items-center gap-1.5 w-[72px] animate-fade-in opacity-0 [animation-fill-mode:forwards] active:scale-95 transition-transform"
+                          >
+                            <span className="h-14 w-14 grid place-items-center rounded-2xl bg-card ring-1 ring-border shadow-card text-2xl">
+                              {b.emoji}
+                            </span>
+                            <span className="text-[11px] font-semibold text-center line-clamp-1">
+                              {b.name}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Trending Models */}
+                  {models.length > 0 && (
+                    <section>
+                      <div className="flex items-baseline justify-between mb-3">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                          🔥 Trending models
+                        </h3>
+                        <span className="text-[10px] font-semibold text-muted-foreground">This week</span>
+                      </div>
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-5 px-5 pb-2">
+                        {models.map((m, i) => (
+                          <button
+                            key={m.name}
+                            onClick={() => go(m.name)}
+                            style={{
+                              animationDelay: `${80 + i * 50}ms`,
+                              background: `linear-gradient(160deg, ${m.tint}, color-mix(in oklab, ${m.tint} 50%, white))`,
+                            }}
+                            className="shrink-0 w-[140px] rounded-2xl p-3 text-left shadow-card ring-1 ring-border/60 active:scale-[0.97] hover:-translate-y-0.5 transition-transform animate-fade-in opacity-0 [animation-fill-mode:forwards]"
+                          >
+                            <div className="flex items-start justify-between">
+                              <span className="h-12 w-12 grid place-items-center rounded-xl bg-white/80 backdrop-blur text-2xl shadow-sm">
+                                {m.emoji}
+                              </span>
+                              {i < 3 && (
+                                <span className="text-[9px] font-bold bg-foreground text-background px-1.5 py-0.5 rounded-full">
+                                  #{i + 1}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-3 text-[13px] font-display font-bold leading-tight line-clamp-2">
+                              {m.name}
+                            </p>
+                            <p className="text-[10px] text-foreground/60 mt-1">
+                              {(2.4 + i * 0.3).toFixed(1)}k searches
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                  {/* Quick Filters */}
+                  <section>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                      Quick filters
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {QUICK_FILTERS.map((f) => (
+                        <button
+                          key={f}
+                          onClick={() => {
+                            if (f === "New") setCondition("New");
+                            else if (f === "Used") setCondition("Used");
+                            else if (f === "Verified") setVerifiedOnly(true);
+                            else if (f === "Nearby") setNearMe(true);
+                            else if (f === "Cheap") setPrice([0, 50000]);
+                            go("");
+                          }}
+                          className="text-xs font-semibold bg-muted hover:bg-secondary px-3.5 py-2 rounded-full active:scale-95 transition-transform"
+                        >
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* Suggested Searches */}
+                  {queries.length > 0 && (
+                    <section>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+                        Suggested searches
+                      </h3>
+                      <ul className="bg-card rounded-2xl shadow-card ring-1 ring-border divide-y divide-border overflow-hidden">
+                        {queries.map((s) => (
+                          <li key={s}>
+                            <button
+                              onClick={() => go(s)}
+                              className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-muted"
+                            >
+                              <SearchIcon className="h-4 w-4 text-primary" />
+                              <span className="flex-1 text-sm">{s}</span>
+                              <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+
+                  <button
+                    onClick={() => go("")}
+                    className="w-full bg-primary text-primary-foreground font-bold py-3.5 rounded-2xl shadow-elevated active:scale-[0.98] transition-transform"
+                  >
+                    Browse all {cat?.name}
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
+        </SheetContent>
+      </Sheet>
     </AppShell>
   );
 }
