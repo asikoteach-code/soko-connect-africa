@@ -477,11 +477,25 @@ function SearchPage() {
       ) : (
         <section className="px-5 mt-5">
           {/* Result count + summary */}
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <p className="text-sm">
               <span className="font-bold">{matched.length}</span>
               <span className="text-muted-foreground"> results{filterSummary && ` · ${filterSummary}`}</span>
             </p>
+            <div className="inline-flex bg-muted rounded-full p-0.5 text-xs font-semibold">
+              <button
+                onClick={() => setView("list")}
+                className={`px-3 py-1.5 rounded-full transition ${view === "list" ? "bg-card shadow-card" : "text-muted-foreground"}`}
+              >
+                List
+              </button>
+              <button
+                onClick={() => { setView("map"); setMapOpen(true); }}
+                className={`px-3 py-1.5 rounded-full inline-flex items-center gap-1 transition ${view === "map" ? "bg-card shadow-card" : "text-muted-foreground"}`}
+              >
+                <MapPin className="h-3 w-3" /> Map
+              </button>
+            </div>
           </div>
 
           {/* Sort chips */}
