@@ -166,6 +166,8 @@ function SearchPage() {
   const [visible, setVisible] = useState(8);
   const [loading, setLoading] = useState(false);
   const [discoverCat, setDiscoverCat] = useState<string | null>(null);
+  const [view, setView] = useState<"list" | "map">("list");
+  const [mapOpen, setMapOpen] = useState(false);
 
   // Filters
   const [price, setPrice] = useState<[number, number]>([0, 2000000]);
