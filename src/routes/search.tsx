@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/AppShell";
 import { ProductCard } from "@/components/app/ProductCard";
+import { MapView, withGeo } from "@/components/app/MapView";
 import { categories, products, formatPrice } from "@/lib/mock-data";
 import {
   ArrowLeft,
