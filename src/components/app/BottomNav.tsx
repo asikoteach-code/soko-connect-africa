@@ -31,8 +31,8 @@ type FabAction = {
 
 const fabActions: FabAction[] = [
   { to: "/post", label: "Sell Product", icon: Tag, tint: "bg-gradient-primary text-primary-foreground" },
-  { to: "/post", label: "Offer Service", icon: Wrench, tint: "bg-accent text-accent-foreground" },
-  { to: "/post", label: "Post Job", icon: Briefcase, tint: "bg-gold text-gold-foreground" },
+  { to: "/post-service", label: "Offer Service", icon: Wrench, tint: "bg-accent text-accent-foreground" },
+  { to: "/post-job", label: "Post Job", icon: Briefcase, tint: "bg-gold text-gold-foreground" },
   { to: "/jobs", label: "Find Worker", icon: Users, tint: "bg-primary-soft text-primary" },
   { to: "/wallet", label: "Boost Listing", icon: Rocket, tint: "bg-foreground text-background" },
 ];
