@@ -14,6 +14,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostServiceRouteImport } from './routes/post-service'
+import { Route as PostJobRouteImport } from './routes/post-job'
 import { Route as PostRouteImport } from './routes/post'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -49,6 +50,11 @@ const ProfileRoute = ProfileRouteImport.update({
 const PostServiceRoute = PostServiceRouteImport.update({
   id: '/post-service',
   path: '/post-service',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostJobRoute = PostJobRouteImport.update({
+  id: '/post-job',
+  path: '/post-job',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostRoute = PostRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/notifications': typeof NotificationsRoute
   '/post': typeof PostRoute
+  '/post-job': typeof PostJobRoute
   '/post-service': typeof PostServiceRoute
   '/profile': typeof ProfileRoute
   '/saved': typeof SavedRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/notifications': typeof NotificationsRoute
   '/post': typeof PostRoute
+  '/post-job': typeof PostJobRoute
   '/post-service': typeof PostServiceRoute
   '/profile': typeof ProfileRoute
   '/saved': typeof SavedRoute
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/notifications': typeof NotificationsRoute
   '/post': typeof PostRoute
+  '/post-job': typeof PostJobRoute
   '/post-service': typeof PostServiceRoute
   '/profile': typeof ProfileRoute
   '/saved': typeof SavedRoute
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/notifications'
     | '/post'
+    | '/post-job'
     | '/post-service'
     | '/profile'
     | '/saved'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/notifications'
     | '/post'
+    | '/post-job'
     | '/post-service'
     | '/profile'
     | '/saved'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/notifications'
     | '/post'
+    | '/post-job'
     | '/post-service'
     | '/profile'
     | '/saved'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   NotificationsRoute: typeof NotificationsRoute
   PostRoute: typeof PostRoute
+  PostJobRoute: typeof PostJobRoute
   PostServiceRoute: typeof PostServiceRoute
   ProfileRoute: typeof ProfileRoute
   SavedRoute: typeof SavedRoute
@@ -273,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/post-service'
       fullPath: '/post-service'
       preLoaderRoute: typeof PostServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/post-job': {
+      id: '/post-job'
+      path: '/post-job'
+      fullPath: '/post-job'
+      preLoaderRoute: typeof PostJobRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/post': {
@@ -361,6 +381,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   NotificationsRoute: NotificationsRoute,
   PostRoute: PostRoute,
+  PostJobRoute: PostJobRoute,
   PostServiceRoute: PostServiceRoute,
   ProfileRoute: ProfileRoute,
   SavedRoute: SavedRoute,
