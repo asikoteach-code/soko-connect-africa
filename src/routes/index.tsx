@@ -84,7 +84,10 @@ function Home() {
             </button>
           </div>
           <div className="absolute -right-6 -bottom-6 h-32 w-32 rounded-full bg-white/20 blur-2xl" />
-          <div className="absolute right-2 top-2 text-5xl">⚡</div>
+          <div className="absolute right-2 top-2 text-5xl theme-light-only">⚡</div>
+          <div className="absolute right-3 top-3 theme-dark-only">
+            <Zap className="h-10 w-10 text-primary" fill="currentColor" />
+          </div>
         </div>
       </div>
 
