@@ -209,6 +209,7 @@ function SearchPage() {
       case "price-asc": list.sort((a, b) => a.price - b.price); break;
       case "price-desc": list.sort((a, b) => b.price - a.price); break;
       case "newest": list.reverse(); break;
+      case "nearest": list = list.map(withGeo).sort((a, b) => a.distanceKm - b.distanceKm); break;
     }
     return list;
   }, [q, activeCat, price, condition, verifiedOnly, city, sort]);
