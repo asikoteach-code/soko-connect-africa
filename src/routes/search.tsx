@@ -140,15 +140,15 @@ const SUGGESTED_QUERIES: Record<string, string[]> = {
 
 const QUICK_FILTERS = ["New", "Used", "Verified", "Cheap", "Nearby"];
 const TRENDING = ["Smart TVs", "Studio space", "Hair braiders", "Solar panels", "PS5", "Generators"];
-const POPULAR_SEARCHES = ["Tecno Camon 20", "Office chair", "Plot in Kitengela", "Bridal hair"];
 const PRESETS: { label: string; range: [number, number] }[] = [
   { label: "Under 5K", range: [0, 5000] },
   { label: "5K–50K", range: [5000, 50000] },
   { label: "50K–200K", range: [50000, 200000] },
   { label: "200K+", range: [200000, 2000000] },
 ];
-type SortKey = "relevance" | "newest" | "price-asc" | "price-desc";
+type SortKey = "nearest" | "relevance" | "newest" | "price-asc" | "price-desc";
 const SORTS: { key: SortKey; label: string }[] = [
+  { key: "nearest", label: "📍 Nearest" },
   { key: "relevance", label: "Relevance" },
   { key: "newest", label: "Newest" },
   { key: "price-asc", label: "Price ↑" },
