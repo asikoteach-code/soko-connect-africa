@@ -100,6 +100,13 @@ function Profile() {
           </div>
         </section>
       ))}
+      <section className="px-5 mt-6">
+        <h2 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2 px-1">
+          Settings
+        </h2>
+        <ThemeToggle />
+      </section>
+
 
       <div className="px-5 mt-6">
         <Link
