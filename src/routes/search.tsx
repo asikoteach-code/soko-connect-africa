@@ -469,8 +469,8 @@ function SearchPage() {
                 <button
                   key={c.id}
                   onClick={() => setDiscoverCat(c.id)}
-                  className="relative h-24 rounded-2xl overflow-hidden text-left p-3 shadow-card active:scale-[0.98] transition"
-                  style={{ background: c.color }}
+                  className="search-category-tile relative h-24 rounded-2xl overflow-hidden text-left p-3 shadow-card active:scale-[0.98] transition"
+                  style={{ ["--tile-color" as string]: c.color }}
                 >
                   <span className="absolute top-2 right-2 text-3xl">{c.icon}</span>
                   <span className="absolute bottom-3 left-3 font-display font-bold text-foreground">
