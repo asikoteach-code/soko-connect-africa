@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/AppShell";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 import {
   BadgeCheck,
   Bookmark,
