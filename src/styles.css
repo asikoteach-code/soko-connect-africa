@@ -117,28 +117,61 @@
   --sidebar-ring: var(--ring);
 }
 
-.dark {
-  --background: oklch(0.18 0.02 160);
-  --foreground: oklch(0.97 0.01 85);
-  --surface: oklch(0.22 0.025 160);
-  --card: oklch(0.22 0.025 160);
-  --card-foreground: oklch(0.97 0.01 85);
-  --popover: oklch(0.22 0.025 160);
-  --popover-foreground: oklch(0.97 0.01 85);
-  --primary: oklch(0.7 0.15 158);
-  --primary-foreground: oklch(0.15 0.03 160);
-  --primary-soft: oklch(0.3 0.06 160);
-  --secondary: oklch(0.28 0.03 160);
-  --secondary-foreground: oklch(0.97 0.01 85);
-  --muted: oklch(0.26 0.025 160);
-  --muted-foreground: oklch(0.7 0.02 90);
-  --accent: oklch(0.7 0.15 160);
-  --accent-foreground: oklch(0.15 0.03 160);
-  --gold: oklch(0.82 0.14 82);
-  --gold-foreground: oklch(0.18 0.04 70);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.7 0.15 158);
+.dark,
+[data-theme="dark"] {
+  --background: #0A0B0D;
+  --foreground: #F4F6F8;
+
+  --surface: #14161A;
+  --card: #14161A;
+  --card-foreground: #F4F6F8;
+  --popover: #14161A;
+  --popover-foreground: #F4F6F8;
+
+  /* Single neon-lime accent — primary CTA, FAB, active states */
+  --primary: #C6F432;
+  --primary-foreground: #0A0B0D;
+  --primary-soft: rgba(198, 244, 50, 0.12);
+
+  --secondary: #1B1E24;
+  --secondary-foreground: #F4F6F8;
+
+  --muted: #1B1E24;
+  --muted-foreground: #A1A8B3;
+
+  --accent: #C6F432;
+  --accent-foreground: #0A0B0D;
+
+  /* Re-skin warm gold (boost / AI card) to surface + neon accent — no orange in dark */
+  --gold: #14161A;
+  --gold-foreground: #C6F432;
+
+  --info: #60A5FA;
+  --info-foreground: #0A0B0D;
+
+  --warning: #C6F432;
+  --warning-foreground: #0A0B0D;
+
+  --destructive: #F87171;
+  --destructive-foreground: #0A0B0D;
+
+  --success: #34D399;
+  --success-foreground: #0A0B0D;
+
+  --border: rgba(255, 255, 255, 0.07);
+  --input: #1B1E24;
+  --ring: #C6F432;
+
+  /* Re-skinned gradients — no orange/amber in dark mode */
+  --gradient-primary: linear-gradient(135deg, #C6F432, #D4FF4D);
+  --gradient-gold: linear-gradient(135deg, #14161A, #1B1E24);
+  --gradient-hero: linear-gradient(160deg, #14161A 0%, #0F1115 60%, #0A0B0D 100%);
+  --gradient-warm: linear-gradient(180deg, #0A0B0D, #0F1115);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 16px -4px rgba(0, 0, 0, 0.5), 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 12px 32px -12px rgba(0, 0, 0, 0.7), 0 4px 12px -4px rgba(0, 0, 0, 0.5);
+  --shadow-gold: 0 8px 28px rgba(198, 244, 50, 0.28);
 }
 
 @layer base {
