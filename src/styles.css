@@ -214,3 +214,36 @@
   0%, 100% { translate: 0 0; }
   50% { translate: 0 -6px; }
 }
+
+/* Theme-conditional visibility helpers */
+.theme-dark-only { display: none; }
+[data-theme="dark"] .theme-light-only { display: none; }
+[data-theme="dark"] .theme-dark-only { display: block; }
+
+/* Search: popular category tiles — pastel in light, dark surface + tint glow in dark */
+.search-category-tile {
+  background: var(--tile-color);
+}
+[data-theme="dark"] .search-category-tile {
+  background: var(--surface);
+  box-shadow:
+    inset 0 0 0 1px var(--border),
+    0 0 0 1px color-mix(in oklch, var(--tile-color) 35%, transparent),
+    0 8px 24px -12px color-mix(in oklch, var(--tile-color) 60%, transparent);
+}
+
+/* Search: map teaser — light pastel map in light, dark map in dark */
+.search-map-teaser {
+  background:
+    radial-gradient(ellipse at 25% 30%, oklch(0.92 0.06 180), transparent 60%),
+    radial-gradient(ellipse at 80% 70%, oklch(0.92 0.07 80), transparent 60%),
+    linear-gradient(135deg, oklch(0.95 0.03 200), oklch(0.92 0.04 150));
+}
+.search-map-teaser__lines path { stroke: oklch(0.78 0.04 180); }
+[data-theme="dark"] .search-map-teaser {
+  background:
+    radial-gradient(ellipse at 25% 30%, rgba(198, 244, 50, 0.18), transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(96, 165, 250, 0.08), transparent 60%),
+    linear-gradient(135deg, #14161A, #0A0B0D);
+}
+[data-theme="dark"] .search-map-teaser__lines path { stroke: rgba(198, 244, 50, 0.35); }
