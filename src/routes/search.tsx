@@ -11,8 +11,6 @@ import {
   X,
   ArrowRight,
   MapPin,
-  Eye,
-  ChevronRight,
   PackageSearch,
   Compass,
 } from "lucide-react";
@@ -140,15 +138,15 @@ const SUGGESTED_QUERIES: Record<string, string[]> = {
 
 const QUICK_FILTERS = ["New", "Used", "Verified", "Cheap", "Nearby"];
 const TRENDING = ["Smart TVs", "Studio space", "Hair braiders", "Solar panels", "PS5", "Generators"];
-const POPULAR_SEARCHES = ["Tecno Camon 20", "Office chair", "Plot in Kitengela", "Bridal hair"];
 const PRESETS: { label: string; range: [number, number] }[] = [
   { label: "Under 5K", range: [0, 5000] },
   { label: "5K–50K", range: [5000, 50000] },
   { label: "50K–200K", range: [50000, 200000] },
   { label: "200K+", range: [200000, 2000000] },
 ];
-type SortKey = "relevance" | "newest" | "price-asc" | "price-desc";
+type SortKey = "nearest" | "relevance" | "newest" | "price-asc" | "price-desc";
 const SORTS: { key: SortKey; label: string }[] = [
+  { key: "nearest", label: "📍 Nearest" },
   { key: "relevance", label: "Relevance" },
   { key: "newest", label: "Newest" },
   { key: "price-asc", label: "Price ↑" },
@@ -162,7 +160,7 @@ function SearchPage() {
   const [phIndex, setPhIndex] = useState(0);
   const [showSuggest, setShowSuggest] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>("relevance");
+  const [sort, setSort] = useState<SortKey>("nearest");
   const [visible, setVisible] = useState(8);
   const [loading, setLoading] = useState(false);
   const [discoverCat, setDiscoverCat] = useState<string | null>(null);
@@ -209,6 +207,7 @@ function SearchPage() {
       case "price-asc": list.sort((a, b) => a.price - b.price); break;
       case "price-desc": list.sort((a, b) => b.price - a.price); break;
       case "newest": list.reverse(); break;
+      case "nearest": list = list.map(withGeo).sort((a, b) => a.distanceKm - b.distanceKm); break;
     }
     return list;
   }, [q, activeCat, price, condition, verifiedOnly, city, sort]);
@@ -384,133 +383,138 @@ function SearchPage() {
 
       {!q ? (
         <>
-          {/* Near You — map CTA */}
-          <section className="px-5 mt-5">
+          {/* HERO — Near you map (signature) */}
+          <section className="px-4 mt-4">
             <button
               onClick={() => setMapOpen(true)}
-              className="search-map-teaser relative w-full h-32 rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
+              aria-label="Open map of sellers near you"
+              className="search-map-teaser relative w-full rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
+              style={{ height: "min(42vh, 380px)", minHeight: 260 }}
             >
               <svg className="search-map-teaser__lines absolute inset-0 h-full w-full opacity-50" preserveAspectRatio="none">
-                <path d="M0,80 Q120,60 240,100 T500,90" strokeWidth="3" fill="none" strokeLinecap="round" />
-                <path d="M80,0 Q110,80 60,160" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                <path d="M0,140 Q120,80 260,160 T560,150" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M100,0 Q140,140 70,280" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                <path d="M0,260 Q200,240 420,300" strokeWidth="2" fill="none" strokeLinecap="round" />
               </svg>
-              {/* Mini pins */}
-              <span className="absolute left-[18%] top-[35%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-background">
-                <span className="h-2 w-2 rounded-full bg-primary" />
+
+              {/* Pulsing "you are here" */}
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="relative flex h-4 w-4">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-4 w-4 rounded-full bg-primary ring-4 ring-background" />
+                </span>
               </span>
-              <span className="absolute left-[55%] top-[25%] h-7 w-7 rounded-full bg-primary grid place-items-center shadow-elevated ring-2 ring-background">
-                <MapPin className="h-3.5 w-3.5 text-primary-foreground" />
-              </span>
-              <span className="absolute left-[78%] top-[60%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-background">
-                <span className="h-2 w-2 rounded-full bg-gold" />
-              </span>
-              <div className="absolute inset-0 p-4 flex flex-col justify-end">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-foreground/70">📍 Near you</p>
-                <p className="font-display font-bold text-lg leading-tight text-foreground">Discover sellers around you</p>
-                <p className="text-xs text-foreground/70 mt-0.5">Open interactive map →</p>
+
+              {/* Mini product pins with thumbnail + price */}
+              {products.slice(0, 5).map((p, i) => {
+                const g = withGeo(p);
+                return (
+                  <span
+                    key={p.id}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 animate-fade-in"
+                    style={{ left: `${g.x}%`, top: `${g.y}%`, animationDelay: `${i * 90}ms` }}
+                  >
+                    <span className="flex items-center gap-1 pl-0.5 pr-2 py-0.5 rounded-full bg-card shadow-elevated ring-2 ring-background">
+                      <span className="h-6 w-6 rounded-full overflow-hidden bg-muted">
+                        <img src={p.image} alt="" className="h-full w-full object-cover" />
+                      </span>
+                      <span className="text-[10px] font-bold whitespace-nowrap">
+                        {p.currency} {(p.price / 1000).toFixed(0)}k
+                      </span>
+                    </span>
+                  </span>
+                );
+              })}
+
+              {/* Bottom info panel */}
+              <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-background/90 via-background/55 to-transparent">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-foreground/70 flex items-center gap-1">
+                  <MapPin className="h-3 w-3 text-primary" /> Near you · Nairobi
+                </p>
+                <div className="flex items-end justify-between gap-2 mt-1">
+                  <div className="min-w-0">
+                    <p className="font-display font-bold text-xl leading-tight">Discover what's around you</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {products.length}+ sellers live nearby
+                    </p>
+                  </div>
+                  <span className="shrink-0 inline-flex items-center gap-1 bg-primary text-primary-foreground text-xs font-bold px-3 py-2 rounded-full shadow-card">
+                    Open map <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
               </div>
             </button>
           </section>
 
-          {/* Recent */}
+          {/* Recent — compact chip row */}
           {recents.length > 0 && (
-            <section className="px-5 mt-5">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Recent</h2>
-                <button onClick={() => setRecents([])} className="text-xs text-primary font-semibold">
-                  Clear all
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2 mt-3">
+            <section className="mt-4">
+              <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide px-4 pb-1">
+                <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Recent
+                </span>
                 {recents.map((r) => (
-                  <span
+                  <button
                     key={r}
-                    className="inline-flex items-center gap-1 text-sm bg-card border border-border pl-3 pr-1.5 py-1.5 rounded-full"
+                    onClick={() => submitSearch(r)}
+                    className="shrink-0 text-xs font-medium bg-muted text-foreground px-3 py-1.5 rounded-full active:scale-95 transition"
                   >
-                    <button onClick={() => submitSearch(r)} className="font-medium">{r}</button>
-                    <button
-                      onClick={() => setRecents(recents.filter((x) => x !== r))}
-                      aria-label={`Remove ${r}`}
-                      className="h-6 w-6 grid place-items-center rounded-full hover:bg-muted"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </span>
+                    {r}
+                  </button>
                 ))}
+                <button
+                  onClick={() => setRecents([])}
+                  className="shrink-0 text-xs text-muted-foreground px-2"
+                >
+                  Clear
+                </button>
               </div>
             </section>
           )}
 
-          {/* Trending */}
-          <section className="px-5 mt-6">
-            <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-              🔥 Trending in Africa
+          {/* Discover — merged trending + small category chips */}
+          <section className="px-4 mt-5 mb-8">
+            <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
+              ✨ Discover
             </h2>
-            <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide -mx-5 px-5 pb-1">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-2">
               {TRENDING.map((r) => (
                 <button
                   key={r}
                   onClick={() => submitSearch(r)}
-                  className="shrink-0 text-sm bg-primary-soft text-primary font-semibold px-3.5 py-1.5 rounded-full"
+                  className="shrink-0 text-xs bg-primary-soft text-primary font-semibold px-3.5 py-1.5 rounded-full active:scale-95 transition"
                 >
-                  {r}
+                  🔥 {r}
                 </button>
               ))}
             </div>
-          </section>
-
-          {/* Popular categories grid */}
-          <section className="px-5 mt-6">
-            <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
-              Popular categories
-            </h2>
-            <div className="grid grid-cols-2 gap-3">
-              {categories.slice(0, 6).map((c) => (
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1 mt-2">
+              {categories.map((c) => (
                 <button
                   key={c.id}
                   onClick={() => setDiscoverCat(c.id)}
-                  className="search-category-tile relative h-24 rounded-2xl overflow-hidden text-left p-3 shadow-card active:scale-[0.98] transition"
-                  style={{ ["--tile-color" as string]: c.color }}
+                  className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold bg-muted text-foreground px-3 py-1.5 rounded-full active:scale-95 transition"
                 >
-                  <span className="absolute top-2 right-2 text-3xl">{c.icon}</span>
-                  <span className="absolute bottom-3 left-3 font-display font-bold text-foreground">
-                    {c.name}
-                  </span>
+                  <span>{c.icon}</span> {c.name}
                 </button>
               ))}
             </div>
           </section>
-
-          {/* People also searched */}
-          <section className="px-5 mt-6">
-            <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
-              People also searched
-            </h2>
-            <ul className="bg-card rounded-2xl shadow-card divide-y divide-border overflow-hidden">
-              {POPULAR_SEARCHES.map((s) => (
-                <li key={s}>
-                  <button
-                    onClick={() => submitSearch(s)}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-left active:bg-muted"
-                  >
-                    <SearchIcon className="h-4 w-4 text-muted-foreground" />
-                    <span className="flex-1 text-sm">{s}</span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
         </>
       ) : (
-        <section className="px-5 mt-5">
-          {/* Result count + summary */}
+        <section className="px-4 mt-4">
+          {/* Result count + view toggle — proximity phrasing */}
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm">
-              <span className="font-bold">{matched.length}</span>
-              <span className="text-muted-foreground"> results{filterSummary && ` · ${filterSummary}`}</span>
-            </p>
-            <div className="inline-flex bg-muted rounded-full p-0.5 text-xs font-semibold">
+            <div className="min-w-0">
+              <p className="text-base font-display font-bold leading-tight truncate">
+                {matched.length} {matched.length === 1 ? "result" : "results"} for "{q}"
+              </p>
+              <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                <MapPin className="h-3 w-3 text-primary" /> near you · Nairobi
+                {filterSummary && <span className="truncate"> · {filterSummary}</span>}
+              </p>
+            </div>
+            <div className="shrink-0 inline-flex bg-muted rounded-full p-0.5 text-xs font-semibold">
               <button
                 onClick={() => setView("list")}
                 className={`px-3 py-1.5 rounded-full transition ${view === "list" ? "bg-card shadow-card" : "text-muted-foreground"}`}
@@ -526,8 +530,54 @@ function SearchPage() {
             </div>
           </div>
 
+          {/* Results map preview — tap to expand */}
+          {!loading && matched.length > 0 && (
+            <button
+              onClick={() => setMapOpen(true)}
+              aria-label="Open full map of results"
+              className="search-map-teaser relative w-full mt-4 rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
+              style={{ height: 180 }}
+            >
+              <svg className="search-map-teaser__lines absolute inset-0 h-full w-full opacity-50" preserveAspectRatio="none">
+                <path d="M0,90 Q120,60 260,110 T560,100" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M90,0 Q130,90 60,180" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              </svg>
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="relative flex h-3 w-3">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
+                </span>
+              </span>
+              {matched.slice(0, 6).map((p, i) => {
+                const g = withGeo(p);
+                return (
+                  <span
+                    key={p.id}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 animate-fade-in"
+                    style={{ left: `${g.x}%`, top: `${g.y}%`, animationDelay: `${i * 70}ms` }}
+                  >
+                    <span className="flex items-center gap-1 pl-0.5 pr-2 py-0.5 rounded-full bg-card shadow-elevated ring-2 ring-background">
+                      <span className="h-5 w-5 rounded-full overflow-hidden bg-muted">
+                        <img src={p.image} alt="" className="h-full w-full object-cover" />
+                      </span>
+                      <span className="text-[10px] font-bold whitespace-nowrap">
+                        {p.currency} {(p.price / 1000).toFixed(0)}k
+                      </span>
+                    </span>
+                  </span>
+                );
+              })}
+              <div className="absolute top-3 right-3 inline-flex items-center gap-1 bg-primary text-primary-foreground text-[11px] font-bold px-2.5 py-1 rounded-full shadow-card">
+                Expand <ArrowRight className="h-3 w-3" />
+              </div>
+              <div className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-background/85 backdrop-blur text-foreground text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                <MapPin className="h-3 w-3 text-primary" /> {matched.length} on map
+              </div>
+            </button>
+          )}
+
           {/* Sort chips */}
-          <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide -mx-5 px-5 pb-1">
+          <div className="flex gap-2 mt-4 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1">
             {SORTS.map((s) => {
               const active = sort === s.key;
               return (
@@ -563,16 +613,18 @@ function SearchPage() {
           ) : (
             <>
               <div className="grid grid-cols-2 gap-3 mt-4">
-                {matched.slice(0, visible).map((p, i) => (
-                  <div key={p.id} className="relative">
-                    <ProductCard p={p} />
-                    {i % 3 === 0 && (
-                      <span className="absolute bottom-16 left-2 inline-flex items-center gap-1 bg-foreground/85 text-background text-[10px] font-semibold px-2 py-0.5 rounded-full backdrop-blur">
-                        <Eye className="h-3 w-3" /> {120 + i * 17} viewed today
+                {matched.slice(0, visible).map((p) => {
+                  const g = withGeo(p);
+                  return (
+                    <div key={p.id} className="relative">
+                      <ProductCard p={p} />
+                      {/* Distance badge — signature differentiator */}
+                      <span className="pointer-events-none absolute top-2 left-2 inline-flex items-center gap-1 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-1 rounded-full shadow-card ring-2 ring-background/40">
+                        <MapPin className="h-2.5 w-2.5" /> {g.distanceKm} km
                       </span>
-                    )}
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
               {visible < matched.length && (
                 <button
@@ -586,6 +638,7 @@ function SearchPage() {
           )}
         </section>
       )}
+
 
       {/* Filter bottom sheet */}
       <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
