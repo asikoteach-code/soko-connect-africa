@@ -11,8 +11,6 @@ import {
   X,
   ArrowRight,
   MapPin,
-  Eye,
-  ChevronRight,
   PackageSearch,
   Compass,
 } from "lucide-react";
