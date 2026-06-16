@@ -504,14 +504,19 @@ function SearchPage() {
           </section>
         </>
       ) : (
-        <section className="px-5 mt-5">
-          {/* Result count + summary */}
+        <section className="px-4 mt-4">
+          {/* Result count + view toggle — proximity phrasing */}
           <div className="flex items-center justify-between gap-3">
-            <p className="text-sm">
-              <span className="font-bold">{matched.length}</span>
-              <span className="text-muted-foreground"> results{filterSummary && ` · ${filterSummary}`}</span>
-            </p>
-            <div className="inline-flex bg-muted rounded-full p-0.5 text-xs font-semibold">
+            <div className="min-w-0">
+              <p className="text-base font-display font-bold leading-tight truncate">
+                {matched.length} {matched.length === 1 ? "result" : "results"} for "{q}"
+              </p>
+              <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                <MapPin className="h-3 w-3 text-primary" /> near you · Nairobi
+                {filterSummary && <span className="truncate"> · {filterSummary}</span>}
+              </p>
+            </div>
+            <div className="shrink-0 inline-flex bg-muted rounded-full p-0.5 text-xs font-semibold">
               <button
                 onClick={() => setView("list")}
                 className={`px-3 py-1.5 rounded-full transition ${view === "list" ? "bg-card shadow-card" : "text-muted-foreground"}`}
@@ -527,8 +532,54 @@ function SearchPage() {
             </div>
           </div>
 
+          {/* Results map preview — tap to expand */}
+          {!loading && matched.length > 0 && (
+            <button
+              onClick={() => setMapOpen(true)}
+              aria-label="Open full map of results"
+              className="search-map-teaser relative w-full mt-4 rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
+              style={{ height: 180 }}
+            >
+              <svg className="search-map-teaser__lines absolute inset-0 h-full w-full opacity-50" preserveAspectRatio="none">
+                <path d="M0,90 Q120,60 260,110 T560,100" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M90,0 Q130,90 60,180" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              </svg>
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="relative flex h-3 w-3">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-60 animate-ping" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-primary ring-2 ring-background" />
+                </span>
+              </span>
+              {matched.slice(0, 6).map((p, i) => {
+                const g = withGeo(p);
+                return (
+                  <span
+                    key={p.id}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 animate-fade-in"
+                    style={{ left: `${g.x}%`, top: `${g.y}%`, animationDelay: `${i * 70}ms` }}
+                  >
+                    <span className="flex items-center gap-1 pl-0.5 pr-2 py-0.5 rounded-full bg-card shadow-elevated ring-2 ring-background">
+                      <span className="h-5 w-5 rounded-full overflow-hidden bg-muted">
+                        <img src={p.image} alt="" className="h-full w-full object-cover" />
+                      </span>
+                      <span className="text-[10px] font-bold whitespace-nowrap">
+                        {p.currency} {(p.price / 1000).toFixed(0)}k
+                      </span>
+                    </span>
+                  </span>
+                );
+              })}
+              <div className="absolute top-3 right-3 inline-flex items-center gap-1 bg-primary text-primary-foreground text-[11px] font-bold px-2.5 py-1 rounded-full shadow-card">
+                Expand <ArrowRight className="h-3 w-3" />
+              </div>
+              <div className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-background/85 backdrop-blur text-foreground text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                <MapPin className="h-3 w-3 text-primary" /> {matched.length} on map
+              </div>
+            </button>
+          )}
+
           {/* Sort chips */}
-          <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide -mx-5 px-5 pb-1">
+          <div className="flex gap-2 mt-4 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-1">
             {SORTS.map((s) => {
               const active = sort === s.key;
               return (
@@ -564,16 +615,18 @@ function SearchPage() {
           ) : (
             <>
               <div className="grid grid-cols-2 gap-3 mt-4">
-                {matched.slice(0, visible).map((p, i) => (
-                  <div key={p.id} className="relative">
-                    <ProductCard p={p} />
-                    {i % 3 === 0 && (
-                      <span className="absolute bottom-16 left-2 inline-flex items-center gap-1 bg-foreground/85 text-background text-[10px] font-semibold px-2 py-0.5 rounded-full backdrop-blur">
-                        <Eye className="h-3 w-3" /> {120 + i * 17} viewed today
+                {matched.slice(0, visible).map((p) => {
+                  const g = withGeo(p);
+                  return (
+                    <div key={p.id} className="relative">
+                      <ProductCard p={p} />
+                      {/* Distance badge — signature differentiator */}
+                      <span className="pointer-events-none absolute top-2 left-2 inline-flex items-center gap-1 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-1 rounded-full shadow-card ring-2 ring-background/40">
+                        <MapPin className="h-2.5 w-2.5" /> {g.distanceKm} km
                       </span>
-                    )}
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
               {visible < matched.length && (
                 <button
@@ -587,6 +640,7 @@ function SearchPage() {
           )}
         </section>
       )}
+
 
       {/* Filter bottom sheet */}
       <Sheet open={filterOpen} onOpenChange={setFilterOpen}>
