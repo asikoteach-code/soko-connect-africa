@@ -388,29 +388,25 @@ function SearchPage() {
           <section className="px-5 mt-5">
             <button
               onClick={() => setMapOpen(true)}
-              className="relative w-full h-32 rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
-              style={{
-                background:
-                  "radial-gradient(ellipse at 25% 30%, oklch(0.92 0.06 180), transparent 60%), radial-gradient(ellipse at 80% 70%, oklch(0.92 0.07 80), transparent 60%), linear-gradient(135deg, oklch(0.95 0.03 200), oklch(0.92 0.04 150))",
-              }}
+              className="search-map-teaser relative w-full h-32 rounded-3xl overflow-hidden text-left shadow-elevated active:scale-[0.99] transition"
             >
-              <svg className="absolute inset-0 h-full w-full opacity-50" preserveAspectRatio="none">
-                <path d="M0,80 Q120,60 240,100 T500,90" stroke="oklch(0.78 0.04 180)" strokeWidth="3" fill="none" strokeLinecap="round" />
-                <path d="M80,0 Q110,80 60,160" stroke="oklch(0.78 0.04 180)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <svg className="search-map-teaser__lines absolute inset-0 h-full w-full opacity-50" preserveAspectRatio="none">
+                <path d="M0,80 Q120,60 240,100 T500,90" strokeWidth="3" fill="none" strokeLinecap="round" />
+                <path d="M80,0 Q110,80 60,160" strokeWidth="2.5" fill="none" strokeLinecap="round" />
               </svg>
               {/* Mini pins */}
-              <span className="absolute left-[18%] top-[35%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-white">
+              <span className="absolute left-[18%] top-[35%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-background">
                 <span className="h-2 w-2 rounded-full bg-primary" />
               </span>
-              <span className="absolute left-[55%] top-[25%] h-7 w-7 rounded-full bg-primary grid place-items-center shadow-elevated ring-2 ring-white">
+              <span className="absolute left-[55%] top-[25%] h-7 w-7 rounded-full bg-primary grid place-items-center shadow-elevated ring-2 ring-background">
                 <MapPin className="h-3.5 w-3.5 text-primary-foreground" />
               </span>
-              <span className="absolute left-[78%] top-[60%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-white">
+              <span className="absolute left-[78%] top-[60%] h-6 w-6 rounded-full bg-card grid place-items-center shadow-card ring-2 ring-background">
                 <span className="h-2 w-2 rounded-full bg-gold" />
               </span>
               <div className="absolute inset-0 p-4 flex flex-col justify-end">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-foreground/70">📍 Near you</p>
-                <p className="font-display font-bold text-lg leading-tight">Discover sellers around you</p>
+                <p className="font-display font-bold text-lg leading-tight text-foreground">Discover sellers around you</p>
                 <p className="text-xs text-foreground/70 mt-0.5">Open interactive map →</p>
               </div>
             </button>
@@ -473,8 +469,8 @@ function SearchPage() {
                 <button
                   key={c.id}
                   onClick={() => setDiscoverCat(c.id)}
-                  className="relative h-24 rounded-2xl overflow-hidden text-left p-3 shadow-card active:scale-[0.98] transition"
-                  style={{ background: c.color }}
+                  className="search-category-tile relative h-24 rounded-2xl overflow-hidden text-left p-3 shadow-card active:scale-[0.98] transition"
+                  style={{ ["--tile-color" as string]: c.color }}
                 >
                   <span className="absolute top-2 right-2 text-3xl">{c.icon}</span>
                   <span className="absolute bottom-3 left-3 font-display font-bold text-foreground">
