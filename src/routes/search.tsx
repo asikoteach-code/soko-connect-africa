@@ -162,7 +162,7 @@ function SearchPage() {
   const [phIndex, setPhIndex] = useState(0);
   const [showSuggest, setShowSuggest] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>("relevance");
+  const [sort, setSort] = useState<SortKey>("nearest");
   const [visible, setVisible] = useState(8);
   const [loading, setLoading] = useState(false);
   const [discoverCat, setDiscoverCat] = useState<string | null>(null);
